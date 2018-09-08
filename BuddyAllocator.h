@@ -45,7 +45,6 @@ public:
 class BuddyAllocator{
 private:
 	char* front;
-	BlockHeader* headerStart;
 	uint totalSize;
 	uint basicBlockSize;
 	LinkedList* freeList;
