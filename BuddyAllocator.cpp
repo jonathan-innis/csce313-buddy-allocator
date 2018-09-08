@@ -33,11 +33,15 @@ void LinkedList::remove(BlockHeader* b){
 }
 
 BuddyAllocator::BuddyAllocator (uint _basic_block_size, uint _total_memory_length){
-  front = new char [_total_memory_length];
+  int j = 1;
+  while ((_basic_block_size * j) < _total_memory_length){
+    j *= 2; 
+  }
+  totalSize = _basic_block_size * j;
+  front = new char [int(totalSize)];
   BlockHeader* bh = (BlockHeader*) front;
-  bh->free = true; bh->blockSize = _total_memory_length; bh->nextBlock = nullptr;
+  bh->free = true; bh->blockSize = totalSize; bh->nextBlock = nullptr;
 	basicBlockSize = _basic_block_size;
-  totalSize = _total_memory_length;
   freeListLength = int(log2(totalSize/basicBlockSize)) + 1;
   freeList = new LinkedList[freeListLength];
   freeList[this->freeListPosition(totalSize)].insert(bh);
@@ -118,7 +122,6 @@ char* BuddyAllocator::alloc(uint _length) {
     block->nextBlock = nullptr;
     freeList[i].remove(block);
     char* returnedBlock = (char*) block;
-    debug();
     return (char*) (returnedBlock + sizeof(BlockHeader));
   }
   else{
@@ -137,13 +140,11 @@ char* BuddyAllocator::alloc(uint _length) {
     }
     freeList[freeListPosition(currBlockSize)].remove((BlockHeader*) splitBlock);
     BlockHeader* splitBlockHeader = (BlockHeader*) splitBlock;
-    debug();
     return (splitBlock + sizeof(BlockHeader));
   }
 }
 
 int BuddyAllocator::free(char* _a) {
-  cout << "Freeing" << endl;
   char* startAddr = _a - sizeof(BlockHeader);
   BlockHeader* bh = (BlockHeader*) startAddr;
   freeList[freeListPosition(bh->blockSize)].insert(bh);
@@ -158,7 +159,6 @@ int BuddyAllocator::free(char* _a) {
     }
     else merging = false;
   }
-  debug();
 }
 
 void BuddyAllocator::debug (){
