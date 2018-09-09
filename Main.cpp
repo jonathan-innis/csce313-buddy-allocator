@@ -1,10 +1,20 @@
 #include "Ackerman.h"
 #include "BuddyAllocator.h"
+#include <unistd.h>
 
 int main(int argc, char ** argv) {
-
+  int basic_block_size, memory_length;
+  int c;
   try{
-    int basic_block_size = 128, memory_length = 500;
+    while ((c = getopt (argc, argv, "b:s:")) != -1)
+      switch (c){
+        case 'b':
+          basic_block_size = atoi(optarg);  
+          break;
+        case 's':
+          memory_length = atoi(optarg);
+          break;
+      }
 
     // create memory manager
     BuddyAllocator * allocator = new BuddyAllocator(basic_block_size, memory_length);
