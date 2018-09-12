@@ -3,7 +3,8 @@
 #include <unistd.h>
 
 int main(int argc, char ** argv) {
-  int basic_block_size, memory_length;
+  int basic_block_size = 128;
+  int memory_length = 512 * 1024;
   int c;
   try{
     while ((c = getopt (argc, argv, "b:s:")) != -1)
@@ -15,7 +16,6 @@ int main(int argc, char ** argv) {
           memory_length = atoi(optarg);
           break;
       }
-
     // create memory manager
     BuddyAllocator * allocator = new BuddyAllocator(basic_block_size, memory_length);
 
