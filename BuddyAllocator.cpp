@@ -64,7 +64,9 @@ bool BuddyAllocator::isvalid(char* addr){
 }
 
 bool BuddyAllocator::arebuddies(char* block1, char* block2){
-  return this->getbuddy(block1) == block2;
+  BlockHeader* bh1 = (BlockHeader*) block1;
+  BlockHeader* bh2 = (BlockHeader*) block2;
+  return bh2->free && bh1->blockSize == bh2->blockSize;
 }
 
 char* BuddyAllocator::merge(char* block1, char* block2){
@@ -150,7 +152,7 @@ int BuddyAllocator::free(char* _a) {
   while (merging){
     char* buddy = getbuddy(startAddr);
     BlockHeader* buddy_header = (BlockHeader*) buddy;
-    if (buddy_header->free && buddy_header->blockSize == bh->blockSize){
+    if (arebuddies(startAddr, buddy)){
       startAddr = merge(startAddr, buddy);
       bh = (BlockHeader*) startAddr;
     }

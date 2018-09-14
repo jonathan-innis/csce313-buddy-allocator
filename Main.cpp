@@ -4,7 +4,7 @@
 
 int main(int argc, char ** argv) {
   int basic_block_size = 128;
-  int memory_length = 512 * 1024;
+  int memory_length = 524288;
   int c;
   try{
     while ((c = getopt (argc, argv, "b:s:")) != -1)
