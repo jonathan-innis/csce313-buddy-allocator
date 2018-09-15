@@ -27,7 +27,7 @@ int main(int argc, char ** argv) {
     // destroy memory manager
     delete allocator;
   }
-  catch (runtime_error e){
-    cerr << e.what() << endl;
+  catch (...){
+    cerr << "There was an error and we had to exit" << endl;
   }
 }

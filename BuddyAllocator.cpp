@@ -110,7 +110,7 @@ char* BuddyAllocator::split(char* block){
 char* BuddyAllocator::alloc(uint _length) {
   int i = 0;
   int j = 1;
-  if (_length > totalSize - sizeof(BlockHeader)) throw runtime_error("There is not enough space in memory to allocate the needed space.");
+  if (_length > totalSize - sizeof(BlockHeader)) return nullptr;
   while ((basicBlockSize * j) - sizeof(BlockHeader) < _length){
     j *= 2; 
     i++;
@@ -128,7 +128,7 @@ char* BuddyAllocator::alloc(uint _length) {
     char* splitBlock;
     while (freeList[i].getlength() == 0){
       i++;
-      if (i >= freeListLength) throw runtime_error("There is not enough space in memory to allocate the needed space");
+      if (i >= freeListLength) return nullptr;
     }
     int currBlockSize = freeList[i].gethead()->blockSize;
     while (neededBlockSize != currBlockSize){
